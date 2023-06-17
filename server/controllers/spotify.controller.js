@@ -1,4 +1,5 @@
 const axios = require('axios');
+const querystring = require('querystring');
 
 module.exports.spotifyArtist = (req, res) => {
     axios.post('https://accounts.spotify.com/api/token', `grant_type=client_credentials&client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}`,
@@ -15,3 +16,26 @@ module.exports.spotifyArtist = (req, res) => {
     })
     .catch(err => res.status(400).json(err));
 }
+
+module.exports.spotifyUserLogin = (req, res) => {
+    const params = {
+        client_id : process.env.CLIENT_ID,
+        response_type : 'code',
+        redirect_uri : 'http://localhost:3000',
+        scope : 'user-read-private user-follow-read playlist-read-private playlist-read-public user-read-currently-playing user-top-read user-read-recently-played',
+        state : generateState()
+    }
+    res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify(params));
+}
+
+const generateState = () => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let state = '';
+    
+    for (let i = 0; i < 16; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        state += characters.charAt(randomIndex);
+    }
+    
+        return state;
+};

@@ -4,7 +4,7 @@ const SearchButton = (props) => {
 
     const submitHandler = (e) =>{
         e.preventDefault();
-        axios.get(`http://localhost:8000/api/spotify/artist`)
+        axios.get(`http://localhost:8000/api/spotify/userLogin`)
         .then((res) => {
             console.log(res.data);
         })
