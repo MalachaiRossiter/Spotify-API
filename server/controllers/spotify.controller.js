@@ -22,7 +22,7 @@ module.exports.spotifyUserLogin = (req, res) => {
         client_id : process.env.CLIENT_ID,
         response_type : 'code',
         redirect_uri : 'http://localhost:3000',
-        scope : 'user-read-private user-follow-read playlist-read-private playlist-read-public user-read-currently-playing user-top-read user-read-recently-played',
+        scope : 'user-follow-read user-top-read user-read-recently-played',
         state : generateState()
     }
     res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify(params));
