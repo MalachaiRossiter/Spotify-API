@@ -1,20 +1,24 @@
 import axios from 'axios';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const SearchButton = (props) => {
+    const [spotifyLink, setSpotifyLink] = useState();
+    const [loaded, setLoaded] = useState(false);
 
-    const submitHandler = (e) =>{
-        e.preventDefault();
+
+    useEffect(() => {
         axios.get(`http://localhost:8000/api/spotify/userLogin`)
         .then((res) => {
-            console.log(res.data);
+            setSpotifyLink(res.data.loginLink);
         })
         .catch((err) => {console.log(err)});
-    }
+    }, [])
 
 
     return(
         <div className={'serach-container'}>
-            <button onClick={submitHandler}>Search</button>
+            <Link to={spotifyLink}>Log into Spotify</Link>
         </div>
     )
 }

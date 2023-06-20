@@ -11,12 +11,6 @@ require('dotenv').config();
 
 app.use(cors(corsOptions));
 
-// Add a middleware to set the Access-Control-Allow-Origin header
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-    next();
-});
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

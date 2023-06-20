@@ -25,7 +25,7 @@ module.exports.spotifyUserLogin = (req, res) => {
         scope : 'user-follow-read user-top-read user-read-recently-played',
         state : generateState()
     }
-    res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify(params));
+    res.status(200).json({loginLink: 'https://accounts.spotify.com/authorize?' + querystring.stringify(params)});
 }
 
 const generateState = () => {
