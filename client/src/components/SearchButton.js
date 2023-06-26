@@ -17,7 +17,7 @@ const SearchButton = (props) => {
 
 
     return(
-        <div className={'serach-container'}>
+        <div className={'search-container'}>
             <Link to={spotifyLink}>Log into Spotify</Link>
         </div>
     )
