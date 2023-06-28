@@ -1,4 +1,5 @@
 import SearchButton from "./SearchButton";
+import SpotifyInformation from "./SpotifyInformation";
 import { useLocation } from 'react-router-dom';
 
 const MainContainer = (props) => {
@@ -8,7 +9,7 @@ const MainContainer = (props) => {
 
     if (code) {
         return (
-            <SpotifyInformation/>
+            <SpotifyInformation code={code}/>
         )
     }
     else {

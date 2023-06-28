@@ -40,3 +40,17 @@ const generateState = () => {
     
         return state;
 };
+
+module.exports.spotifyCode = (req, res) => {
+    const params = {
+        code : req.body.code,
+        redirect_uri : 'http://localhost:3000',
+        grant_type : 'authorization_code'
+    }
+    axios.post('https://accounts.spotify.com/api/token', params)
+    .then(accountInfo => {
+        console.log(accountInfo.data);
+        res.status(200).json(accountInfo.data);
+    })
+    .catch(err => res.status(400).json(err));
+}
