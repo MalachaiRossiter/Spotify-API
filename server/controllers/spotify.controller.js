@@ -47,10 +47,14 @@ module.exports.spotifyCode = (req, res) => {
         redirect_uri : 'http://localhost:3000',
         grant_type : 'authorization_code'
     }
-    axios.post('https://accounts.spotify.com/api/token', params)
-    .then(accountInfo => {
-        console.log(accountInfo.data);
-        res.status(200).json(accountInfo.data);
+    console.log(params);
+    axios.post('https://accounts.spotify.com/api/token',
+    params,
+    {headers: {'Authorization': "Basic" + Buffer.from(process.env.CLIENT_ID + ":" + process.env.CLIENT_SECRET).toString('base64')}},
+    {json: true})
+    .then(accountToken => {
+        console.log(accountToken.data);
+        res.status(200).json(accountToken.data);
     })
     .catch(err => res.status(400).json(err));
 }

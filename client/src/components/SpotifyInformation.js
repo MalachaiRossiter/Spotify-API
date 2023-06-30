@@ -5,12 +5,12 @@ const SpotifyInformation = (props) => {
     const {code} = props;
 
     useEffect(() => {
-        axios.post(`http://localhost:8000/api/spotify/code`, {code: code})
+        axios.post(`http://localhost:8000/api/spotify/token`, {code: code})
         .then(res => {
             console.log(res.data);
         })
         .catch(err => {console.log(err)})
-    }, [])
+    }, [code])
 
     return (
         <div>
