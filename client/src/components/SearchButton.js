@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import '../styles/SearchButton.css';
 
 const SearchButton = (props) => {
     const [spotifyLink, setSpotifyLink] = useState();
@@ -18,7 +19,7 @@ const SearchButton = (props) => {
 
     return(
         <div className={'search-container'}>
-            <Link to={spotifyLink}>Log into Spotify</Link>
+            <Link to={spotifyLink} id={'login-link'}>Log into Spotify</Link>
         </div>
     )
 }
