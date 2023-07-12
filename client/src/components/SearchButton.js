@@ -21,6 +21,7 @@ const SearchButton = (props) => {
     return(
         <div>
             <div className={'search-container'}>
+            <h1 id={'link-header'}>Unoffical Spotify Wrapped</h1>
                 <Link to={spotifyLink} id={'login-link'}>
                     Log into Spotify
                 </Link>
