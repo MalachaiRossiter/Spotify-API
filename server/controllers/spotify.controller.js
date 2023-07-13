@@ -61,7 +61,13 @@ module.exports.spotifyCode = (req, res) => {
     )
     .then(accountToken => {
         console.log(accountToken.data);
-        res.status(200).json(accountToken.data);
+        axios.get(
+            'https://api.spotify.com/v1/me', {headers: {'Authorization': `Bearer ${accountToken.data.access_token}`}}
+        )
+        .then(userInformation => {
+            console.log(userInformation.data);
+            res.status(200).json(userInformation.data);
+        })
     })
     .catch(err => res.status(400).json(err));
 }
