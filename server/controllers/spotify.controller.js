@@ -54,7 +54,6 @@ module.exports.spotifyCode = (req, res) => {
         grant_type : 'authorization_code'
     }
     const paramsFormData = querystring.stringify(params);
-    console.log(params);
     axios.post(
         'https://accounts.spotify.com/api/token', //gets access token from spotify which is how we access user information
         paramsFormData,
@@ -70,13 +69,14 @@ module.exports.spotifyCode = (req, res) => {
         const userInfo = {}; //creates the userInfo object that is sent back to the client
         axios.get('https://api.spotify.com/v1/me', {headers: {'Authorization': `Bearer ${accountToken.data.access_token}`}})
         .then(userInformation => {
-            userInfo.name = userInformation.data.display_name;
+            userInfo.username = userInformation.data.display_name;
             userInfo.id = userInformation.data.id;
             userInfo.images = userInformation.data.images;
             userInfo.followers = userInformation.data.followers;
             axios.get('https://api.spotify.com/v1/me/top/tracks', {headers: {'Authorization': `Bearer ${accountToken.data.access_token}`}})
             .then(topArtists => {
-                console.log(topArtists.data);
+                userInfo.topTracks = topArtists.data.items.map(({artists, name, popularity}) => ({artists, name, popularity}))
+                console.log(userInfo.topTracks);
             })
             .catch(err => {
                 console.log(err)
