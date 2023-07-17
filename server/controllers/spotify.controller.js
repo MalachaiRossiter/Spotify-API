@@ -3,11 +3,12 @@ const querystring = require('querystring');
 
 // this is a test controller to understand the basics of the Spotify API
 // module.exports.spotifyArtist = (req, res) => {
+//     console.log('penis');
 //     axios.post('https://accounts.spotify.com/api/token', `grant_type=client_credentials&client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}`,
 //     {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
 //     .then(token => {
 //         console.log(token.data.access_token);
-//         axios.get(`https://api.spotify.com/v1/artists/1t20wYnTiAT0Bs7H1hv9Wt?si=Nx_F-DWJSOCf7pJ15DSzkQ`,
+//         axios.get(`https://api.spotify.com/v1/artists/06HL4z0CvFAxyc27GXpf02?si=Nx_F-DWJSOCf7pJ15DSzkQ`,
 //         {headers: {Authorization: `Bearer ${token.data.access_token}`}})
 //         .then(artist => {
 //             console.log(artist.data);
@@ -27,7 +28,7 @@ module.exports.spotifyUserLogin = (req, res) => {
         response_type : 'code',
         redirect_uri : 'http://localhost:3000',
         show_dialog: true,
-        scope : 'user-follow-read user-top-read user-read-recently-played',
+        scope : 'user-follow-read user-top-read user-read-recently-played user-read-currently-playing',
         state : generateState()
     }
     res.status(200).json({loginLink: 'https://accounts.spotify.com/authorize?' + querystring.stringify(params)});
@@ -65,18 +66,61 @@ module.exports.spotifyCode = (req, res) => {
         }
     )
     .then(accountToken => {
-        console.log(accountToken.data);
         const userInfo = {}; //creates the userInfo object that is sent back to the client
-        axios.get('https://api.spotify.com/v1/me', {headers: {'Authorization': `Bearer ${accountToken.data.access_token}`}})
-        .then(userInformation => {
-            userInfo.username = userInformation.data.display_name;
-            userInfo.id = userInformation.data.id;
-            userInfo.images = userInformation.data.images;
-            userInfo.followers = userInformation.data.followers;
-            axios.get('https://api.spotify.com/v1/me/top/tracks', {headers: {'Authorization': `Bearer ${accountToken.data.access_token}`}})
-            .then(topArtists => {
-                userInfo.topTracks = topArtists.data.items.map(({artists, name, popularity}) => ({artists, name, popularity}))
-                console.log(userInfo.topTracks);
+        axios.get('https://api.spotify.com/v1/me', {headers: {'Authorization': `Bearer ${accountToken.data.access_token}`}}) //gets actual User Data
+        .then(apiUserInformation => {
+            userInfo.username = apiUserInformation.data.display_name;
+            userInfo.id = apiUserInformation.data.id;
+            userInfo.images = apiUserInformation.data.images;
+            userInfo.followers = apiUserInformation.data.followers;
+            axios.get('https://api.spotify.com/v1/me/top/tracks', {headers: {'Authorization': `Bearer ${accountToken.data.access_token}`}}) // gets most listened to Songs
+            .then(apiTracks => {
+                userInfo.topTracks = apiTracks.data.items.map(({artists, name, popularity, album, id}) => ({artists, name, popularity, albumName: album ? album.name : 'No Album', id}))
+                axios.get('https://api.spotify.com/v1/me/top/artists', {headers: {'Authorization': `Bearer ${accountToken.data.access_token}`}}) // gets most listened to Artists
+                .then(apiTopArtists => {
+                    userInfo.topArtists = apiTopArtists.data.items.map(({genres, images, name, id, popularity}) => ({genres, images, name, artistId: id, popularity}))
+                    axios.get('https://api.spotify.com/v1/me/player/currently-playing', {headers: {'Authorization': `Bearer ${accountToken.data.access_token}`}}) // gets currently playing song
+                    .then(apiCurrentlyPlaying => {
+                        //take currently playing information and add it to the userInfo
+                        userInfo.currentlyPlaying = {};
+                        if (apiCurrentlyPlaying.data.is_playing) {
+                            userInfo.currentlyPlaying.songTitle = apiCurrentlyPlaying.data.item.name;
+                            userInfo.currentlyPlaying.albumName = apiCurrentlyPlaying.data.item.album.name;
+                            userInfo.currentlyPlaying.albumArt = apiCurrentlyPlaying.data.item.album.images;
+                            userInfo.currentlyPlaying.artists = apiCurrentlyPlaying.data.item.album.artists;
+                            userInfo.currentlyPlaying.isPlaying = apiCurrentlyPlaying.data.is_playing;
+                        }
+                        else {userInfo.currentlyPlaying.isPlaying = false};
+                        //take information from userInfo and make it useable for the recommendations request
+                        const trackIdsList = userInfo.topTracks.slice(0, 3).map(track => track.id).join(',');
+                        const artistIdsList = userInfo.topArtists.slice(0, 3).map(artist => artist.artistId).join(',');
+                        const genresList = userInfo.topArtists.slice(0, 3).flatMap(artist => artist.genres.map(genre => genre.replace(/\s/g, '%2B'))).join(',');
+                        const queryParams = {
+                            limit : 3,
+                            seed_artists : artistIdsList,
+                            seed_genres : genresList,
+                            seed_tracks : trackIdsList
+                        }
+                        axios.get(`https://api.spotify.com/v1/recommendations?` + querystring.stringify(queryParams),
+                                {headers: {'Authorization': `Bearer ${accountToken.data.access_token}`}})
+                            .then(apiRecommendations => {
+                                userInfo.recommendedTracks = apiRecommendations.data.tracks.map(({artists, album, name, popularity}) => ({artists, images: album.images, name, popularity}));
+                                console.log(userInfo);
+                            })
+                            .catch(err => {
+                                console.log(err)
+                                res.status(400).json(err)
+                            });
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        res.status(400).json(err)
+                    });
+                })
+                .catch(err => {
+                    console.log(err)
+                    res.status(400).json(err)
+                });
             })
             .catch(err => {
                 console.log(err)
