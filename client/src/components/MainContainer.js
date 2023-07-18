@@ -5,11 +5,11 @@ import { useLocation } from 'react-router-dom';
 const MainContainer = (props) => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
-    const code = queryParams.get('code');
+    const spotifyTokenCode = queryParams.get('code');
 
-    if (code) {
+    if (spotifyTokenCode) {
         return (
-            <SpotifyInformation code={code}/>
+            <SpotifyInformation spotifyTokenCode={spotifyTokenCode}/>
         )
     }
     else {

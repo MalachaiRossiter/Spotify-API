@@ -78,6 +78,7 @@ module.exports.spotifyCode = (req, res) => {
                 userInfo.topTracks = apiTracks.data.items.map(({artists, name, popularity, album, id}) => ({artists, name, popularity, albumName: album ? album.name : 'No Album', id}))
                 axios.get('https://api.spotify.com/v1/me/top/artists', {headers: {'Authorization': `Bearer ${accountToken.data.access_token}`}}) // gets most listened to Artists
                 .then(apiTopArtists => {
+                    console.log(apiTopArtists.data.items);
                     userInfo.topArtists = apiTopArtists.data.items.map(({genres, images, name, id, popularity}) => ({genres, images, name, artistId: id, popularity}))
                     axios.get('https://api.spotify.com/v1/me/player/currently-playing', {headers: {'Authorization': `Bearer ${accountToken.data.access_token}`}}) // gets currently playing song
                     .then(apiCurrentlyPlaying => {
@@ -93,8 +94,11 @@ module.exports.spotifyCode = (req, res) => {
                         else {userInfo.currentlyPlaying.isPlaying = false};
                         //take information from userInfo and make it useable for the recommendations request
                         const trackIdsList = userInfo.topTracks.slice(0, 3).map(track => track.id).join(',');
-                        const artistIdsList = userInfo.topArtists.slice(0, 3).map(artist => artist.artistId).join(',');
-                        const genresList = userInfo.topArtists.slice(0, 3).flatMap(artist => artist.genres.map(genre => genre.replace(/\s/g, '%2B'))).join(',');
+                        const artistIdsList = userInfo.topArtists.slice(0, 1).map(artist => artist.artistId).join(',');
+                        const genresList = userInfo.topArtists.slice(0, 1).reduce((genres, artist) => 
+                        {if (artist.genres && artist.genres.length > 0) {genres.push(artist.genres[0]);}
+                            return genres;
+                        }, []).join(',');
                         const queryParams = {
                             limit : 3,
                             seed_artists : artistIdsList,
@@ -105,7 +109,7 @@ module.exports.spotifyCode = (req, res) => {
                                 {headers: {'Authorization': `Bearer ${accountToken.data.access_token}`}})
                             .then(apiRecommendations => {
                                 userInfo.recommendedTracks = apiRecommendations.data.tracks.map(({artists, album, name, popularity}) => ({artists, images: album.images, name, popularity}));
-                                console.log(userInfo);
+                                res.status(200).json({userInfo});
                             })
                             .catch(err => {
                                 console.log(err)
