@@ -4,13 +4,118 @@
     height: 100vh;
     width: 100vw;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: #191919;
 }
 
-.music-container{
+.loading-container h1{
+    margin: 0px;
+    color: #1ed760;
+}
+
+.music-container {
     width: 20%;
     height: 5%;
-    border: solid 1px #fff;
+    display: flex;
+    justify-content: center;
+}
+
+.music-container {
+    width: 20%;
+    height: 5%;
+    display: flex;
+    justify-content: center;
+}
+
+.musicNote {
+  /* ... other styles ... */
+  padding: 0px 5px;
+  opacity: 0;
+  position: relative;
+}
+
+/* Add keyframes animation for 'note1' */
+@keyframes fallingAnimation1 {
+  0% {
+      opacity: 0;
+      transform: translateY(-50px);
+  }
+  50% {
+      opacity: 1;
+      transform: translateY(0);
+  }
+  100% {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+/* Add keyframes animation for 'note1' */
+@keyframes fallingAnimation1 {
+  0% {
+      opacity: 0;
+      transform: translateY(-50px);
+  }
+  20% {
+      opacity: 1;
+      transform: translateY(0);
+  }
+  100% {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+/* Add keyframes animation for 'note1' */
+@keyframes fallingAnimation2 {
+  0% {
+      opacity: 0;
+      transform: translateY(-50px);
+  }
+  20% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  40% {
+      opacity: 1;
+      transform: translateY(0);
+  }
+  100% {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+@keyframes fallingAnimation3 {
+  0% {
+      opacity: 0;
+      transform: translateY(-50px);
+  }
+  40% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  60% {
+      opacity: 1;
+      transform: translateY(0);
+  }
+  100% {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+/* Apply the animation to the music note */
+.musicNote#note1.animate-opacity1 {
+  animation: fallingAnimation1 5s ease-in-out infinite; /* Set the animation properties */
+}
+
+.musicNote#note2.animate-opacity2 {
+  animation: fallingAnimation2 5s ease-in-out infinite; /* Set the animation properties */
+}
+
+.musicNote#note3.animate-opacity3 {
+  animation: fallingAnimation3 5s ease-in-out infinite; /* Set the animation properties */
 }
