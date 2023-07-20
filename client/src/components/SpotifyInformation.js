@@ -23,7 +23,6 @@ const SpotifyInformation = (props) => {
             </div>
         ) : (
             <Loading/>
-            
         )
     )
 }

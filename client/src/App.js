@@ -1,12 +1,11 @@
 import logo from './logo.svg';
-import './App.css';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
 import MainContainer from './components/MainContainer';
 
 function App() {
   return (
-    <div className="App">
+    <div>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<MainContainer/>}/>
