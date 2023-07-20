@@ -3,11 +3,14 @@
     padding: 0;
     height: 100vh;
     width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: #191919;
 }
 
-.loading-container h1 {
-    margin: 0; /* Add this line to remove the margin for h1 elements */
-    color: #fff; /* Add this line or your preferred text color */
-    /* Add any other styling you want for the h1 elements */
+.music-container{
+    width: 20%;
+    height: 5%;
+    border: solid 1px #fff;
 }
