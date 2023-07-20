@@ -78,7 +78,6 @@ module.exports.spotifyCode = (req, res) => {
                 userInfo.topTracks = apiTracks.data.items.map(({artists, name, popularity, album, id}) => ({artists, name, popularity, albumName: album ? album.name : 'No Album', id}))
                 axios.get('https://api.spotify.com/v1/me/top/artists', {headers: {'Authorization': `Bearer ${accountToken.data.access_token}`}}) // gets most listened to Artists
                 .then(apiTopArtists => {
-                    console.log(apiTopArtists.data.items);
                     userInfo.topArtists = apiTopArtists.data.items.map(({genres, images, name, id, popularity}) => ({genres, images, name, artistId: id, popularity}))
                     axios.get('https://api.spotify.com/v1/me/player/currently-playing', {headers: {'Authorization': `Bearer ${accountToken.data.access_token}`}}) // gets currently playing song
                     .then(apiCurrentlyPlaying => {
