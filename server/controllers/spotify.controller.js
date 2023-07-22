@@ -132,5 +132,7 @@ module.exports.spotifyCode = (req, res) => {
         })
         .catch(err => res.status(400).json(err));1
     })
-    .catch(err => res.status(400).json(err));
+    .catch(err => {
+        console.log("PENIS");
+        res.status(400).json(err)});
 }
