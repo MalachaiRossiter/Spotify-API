@@ -9,23 +9,28 @@ const SpotifyInformation = (props) => {
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
-        console.log(spotifyTokenCode);
-        axios.post(`http://localhost:8000/api/spotify/token`, { code: spotifyTokenCode })
-                .then(res => {
-                    console.log(res.data);
-                    setUserInformation(res.data); // Save response data
-                    setLoaded(true);
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+        const fetchData = async () => {
+            try {
+                console.log(spotifyTokenCode);
+                const tokenResponse = await axios.post(`http://localhost:8000/api/spotify/accountToken`, { code: spotifyTokenCode }, { withCredentials: true });
+                console.log(tokenResponse.data);
+    
+                const userInfoResponse = await axios.get(`http://localhost:8000/api/spotify/userInfo`, { withCredentials: true });
+                console.log(userInfoResponse.data);
+    
+                // Once both requests are completed, set the loaded state to true
+                setLoaded(true);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchData();
     }, [spotifyTokenCode]);
 
     return (
         loaded ? (
             <div>
-                <h1>{userInformation.userInfo.username}</h1> {/* Assuming this is just a placeholder for the actual display */}
-                <UserDisplay userInformation={userInformation} /> {/* Render the user information */}
+                <p>Placeholder</p>
             </div>
         ) : (
             <Loading />
