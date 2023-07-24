@@ -1,36 +1,46 @@
 import axios from 'axios';
 import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import Loading from './Loading';
 import UserDisplay from './UserDisplay';
 
 const SpotifyInformation = (props) => {
     const { spotifyTokenCode } = props;
-    const [userInformation, setUserInformation] = useState([]);
+    const [userInformation, setUserInformation] = useState();
     const [loaded, setLoaded] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                console.log(spotifyTokenCode);
+                //gets creates cookie holding user authenticated token
                 const tokenResponse = await axios.post(`http://localhost:8000/api/spotify/accountToken`, { code: spotifyTokenCode }, { withCredentials: true });
-                console.log(tokenResponse.data);
-    
+                //uses user authenticated token to retreave their data to be displayed
                 const userInfoResponse = await axios.get(`http://localhost:8000/api/spotify/userInfo`, { withCredentials: true });
                 console.log(userInfoResponse.data);
-    
+                setUserInformation(userInfoResponse.data);
                 // Once both requests are completed, set the loaded state to true
                 setLoaded(true);
             } catch (err) {
                 console.log(err);
             }
         };
+        const cookieCheck = async () => {
+            try {
+                const cookieCheck = await axios.get(`http://localhost:8000/api/spotify/cookieCheck`, {withCredentials: true});
+            } catch (err) {
+                console.log(err);
+                navigate('/');
+            }
+        }
         fetchData();
+        cookieCheck();
     }, [spotifyTokenCode]);
 
     return (
         loaded ? (
             <div>
-                <p>Placeholder</p>
+                <UserDisplay userInformation={userInformation}/>
             </div>
         ) : (
             <Loading />

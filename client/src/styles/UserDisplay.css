@@ -1,0 +1,77 @@
+body {
+    background-color: #191919;
+}
+
+/* --------------- */
+/* 1. USER SECTION */
+/* --------------- */
+
+.userDisplay-container h1 {
+    margin: 0px;
+    padding: 0px;
+    color: #1ed760;
+}
+
+.userDisplay-container p {
+    margin: 0px;
+    padding: 0px;
+    color: #fff;
+}
+
+.userDisplay-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.userDisplay {
+    margin-top: 20vh;
+    width: 50%;
+}
+
+.usernameDisplay {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: solid 1px #4e4e4e;
+}
+
+/* --------------------- */
+/* 2. TRACK LIST SECTION */
+/* --------------------- */
+
+.trackList {
+    padding: 0px 10px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    border: solid 1px #fff;
+}
+
+.trackNumber{
+    width: 25px;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.trackImage {
+    margin: 0px 5px;
+    height: 40px;
+    width: 40px;
+}
+
+.trackNameContainer {
+    height: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content:center;
+}
+
+.trackName {
+    font-size: 20px;
+}
+
+.trackArtist {
+    font-size: 12px;
+}

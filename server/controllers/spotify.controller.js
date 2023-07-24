@@ -2,25 +2,6 @@ const axios = require('axios');
 const querystring = require('querystring');
 const jwt = require('jsonwebtoken');
 
-// this is a test controller to understand the basics of the Spotify API
-// module.exports.spotifyArtist = (req, res) => {
-//     console.log('penis');
-//     axios.post('https://accounts.spotify.com/api/token', `grant_type=client_credentials&client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}`,
-//     {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
-//     .then(token => {
-//         console.log(token.data.access_token);
-//         axios.get(`https://api.spotify.com/v1/artists/06HL4z0CvFAxyc27GXpf02?si=Nx_F-DWJSOCf7pJ15DSzkQ`,
-//         {headers: {Authorization: `Bearer ${token.data.access_token}`}})
-//         .then(artist => {
-//             console.log(artist.data);
-//             res.status(200).json(artist.data);
-//         })
-//         .catch(err => res.status(400).json(err));
-//     })
-//     .catch(err => res.status(400).json(err));
-// }
-
-
 //creates the link that gets sent back to the client to authorize the use of their spotify account
 //Corse error happens when trying to reroute the client from the backend. Work around was sending the link to the front end for the client to directly go to
 module.exports.spotifyUserLogin = (req, res) => {
@@ -106,7 +87,7 @@ module.exports.userInformation = async (req, res) => {
         axios.get('https://api.spotify.com/v1/me', {
             headers: { 'Authorization': `Bearer ${accountTokenData}` },
         }),
-        axios.get('https://api.spotify.com/v1/me/top/tracks', {
+        axios.get('https://api.spotify.com/v1/me/top/tracks?limit=10', {
             headers: { 'Authorization': `Bearer ${accountTokenData}` },
         }),
         axios.get('https://api.spotify.com/v1/me/top/artists', {
@@ -128,6 +109,7 @@ module.exports.userInformation = async (req, res) => {
         name,
         popularity,
         albumName: album ? album.name : 'No Album',
+        albumImages: album ? album.images : 'No Album',
         id,
         }));
 
@@ -203,8 +185,17 @@ module.exports.userInformation = async (req, res) => {
             res.status(status).json({ error: 'Something went wrong.' });
         }
         } else {
-            console.log('Unexpected error:', err.message);
+            console.log('Unexpected error:', err);
             res.status(500).json({ error: 'Unexpected error occurred.' });
         }
     }
 };
+
+module.exports.cookieCheck = (req, res) => {
+    const accountTokenData = jwt.verify(req.cookies.accountAccessToken, process.env.SECRET_COOKIE);
+    if (accountTokenData){
+        res.status(200).json({cookie: true});
+    } else {
+        res.status(404).json({cookie: false});
+    }
+}
