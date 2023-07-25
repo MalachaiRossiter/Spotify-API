@@ -23,18 +23,15 @@ const SpotifyInformation = (props) => {
                 setLoaded(true);
             } catch (err) {
                 console.log(err);
+                try {
+                    const cookieCheck = await axios.get(`http://localhost:8000/api/spotify/cookieCheck`, {withCredentials: true});
+                } catch (err) {
+                    console.log(err);
+                    navigate('/');
+                }
             }
         };
-        const cookieCheck = async () => {
-            try {
-                const cookieCheck = await axios.get(`http://localhost:8000/api/spotify/cookieCheck`, {withCredentials: true});
-            } catch (err) {
-                console.log(err);
-                navigate('/');
-            }
-        }
         fetchData();
-        cookieCheck();
     }, [spotifyTokenCode]);
 
     return (

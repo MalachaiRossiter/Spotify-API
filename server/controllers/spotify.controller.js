@@ -90,7 +90,7 @@ module.exports.userInformation = async (req, res) => {
         axios.get('https://api.spotify.com/v1/me/top/tracks?limit=10', {
             headers: { 'Authorization': `Bearer ${accountTokenData}` },
         }),
-        axios.get('https://api.spotify.com/v1/me/top/artists', {
+        axios.get('https://api.spotify.com/v1/me/top/artists?limit=5', {
             headers: { 'Authorization': `Bearer ${accountTokenData}` },
         }),
         ]);
@@ -157,9 +157,11 @@ module.exports.userInformation = async (req, res) => {
         const apiRecommendations = await axios.get(`https://api.spotify.com/v1/recommendations?` + querystring.stringify(queryParams), {
         headers: { 'Authorization': `Bearer ${accountTokenData}` },
         });
-        userInfo.recommendedTracks = apiRecommendations.data.tracks.map(({ artists, album, name, popularity }) => ({
+        console.log(apiRecommendations.data);
+        userInfo.recommendedTracks = apiRecommendations.data.tracks.map(({ artists, album, name, id, popularity }) => ({
         artists,
         images: album.images,
+        id,
         name,
         popularity,
     }));
@@ -191,11 +193,12 @@ module.exports.userInformation = async (req, res) => {
     }
 };
 
+
 module.exports.cookieCheck = (req, res) => {
-    const accountTokenData = jwt.verify(req.cookies.accountAccessToken, process.env.SECRET_COOKIE);
-    if (accountTokenData){
-        res.status(200).json({cookie: true});
-    } else {
-        res.status(404).json({cookie: false});
-    }
-}
+    try {
+        const accountTokenData = jwt.verify(req.cookies.accountAccessToken, process.env.SECRET_COOKIE);
+            res.status(200).json({ cookie: true });
+        } catch (err) {
+            res.status(404).json({ cookie: false });
+        }
+};
