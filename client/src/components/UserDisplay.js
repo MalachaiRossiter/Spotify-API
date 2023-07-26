@@ -20,9 +20,9 @@ const UserDisplay = (props) => {
             {/* User Profile Display */}
             <div className={'userDisplay'}>
                 {images[1] ? (
-                    <img className={'userImage'} src={images[1].url} alt={'Profile Image'} />
+                    <img className={'userImage'} src={images[1].url} alt={'Profile'} />
                 ) : (
-                    <img className={'userImage'} src={defaultImage} alt={'Default Profile Image'} />
+                    <img className={'userImage'} src={defaultImage} alt={'Default Profile'} />
                 )}
                 <div className={'usernameDisplay'}>
                     <p id={'profile'}>Profile</p>
@@ -38,7 +38,7 @@ const UserDisplay = (props) => {
                     {topArtists.map((artist, index) => (
                         <div key={index} className={'card'}>
                             <Link to={`https://open.spotify.com/artist/${artist.artistId}`} target={'_blank'} className={'card-link'}>
-                                <img className={'card-image'} src={artist.images[0].url} alt={'album Image'}/>
+                                <img className={'card-image'} src={artist.images[0].url} alt={'album'}/>
                                 <div className={'card-info'}>
                                     <h4>{artist.name}</h4>
                                     {artist.genres[0] && <p>{artist.genres[0]}</p>}
@@ -51,40 +51,42 @@ const UserDisplay = (props) => {
             {/* Most Played Track Display */}
             <div className={'trackDisplay-container'}>
                 <h3>Your Most Played Tracks</h3>
-                <div className={'infoDisplay'}>
-                    <p className={'trackNumber'}>#</p>
-                    <div className={'trackInfoContainer'} id={'title'}>
-                        <p>Title</p>
+                <div className={'trackDisplay'}>
+                    <div className={'infoDisplay'}>
+                        <p className={'trackNumber'}>#</p>
+                        <div className={'trackInfoContainer'} id={'title'}>
+                            <p>Title</p>
+                        </div>
+                        <div className='trackAlbumContainer'>
+                            <p className={'trackAlbum'}>Album</p>
+                            <p className={'trackPopularity'}>Popularity ?/100</p>
+                        </div>
                     </div>
-                    <div className='trackAlbumContainer'>
-                        <p className={'trackAlbum'}>Album</p>
-                        <p className={'trackPopularity'}>Popularity ?/100</p>
-                    </div>
-                </div>
-                {topTracks.map((track, index) => (
-                    <div key={index}>
-                        <Link to={`https://open.spotify.com/track/${track.id}`} target={'_blank'} className='trackList'>
-                            <p className={'trackNumber'}>{index+1}</p>
-                            <div className={'trackInfoContainer'}>
-                                <img className={'trackImage'} src={track.albumImages[0].url} alt={'album Image'}/>
-                                <div className='trackNameContainer'>
-                                    <p className={'trackName'}>{track.name}</p>
-                                    <p className={'trackArtist'}>{track.artists[0].name}</p>
+                    {topTracks.map((track, index) => (
+                        <div key={index}>
+                            <Link to={`https://open.spotify.com/track/${track.id}`} target={'_blank'} className='trackList'>
+                                <p className={'trackNumber'}>{index+1}</p>
+                                <div className={'trackInfoContainer'}>
+                                    <img className={'trackImage'} src={track.albumImages[0].url} alt={'album'}/>
+                                    <div className='trackNameContainer'>
+                                        <p className={'trackName'}>{track.name}</p>
+                                        <p className={'trackArtist'}>{track.artists[0].name}</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className='trackAlbumContainer'>
-                                <p className={'trackAlbum'}>{track.albumName}</p>
-                                <p className={'trackPopularity'}>{track.popularity}</p>
-                            </div>
-                        </Link>
-                    </div>
-                ))}
+                                <div className='trackAlbumContainer'>
+                                    <p className={'trackAlbum'}>{track.albumName}</p>
+                                    <p className={'trackPopularity'}>{track.popularity}</p>
+                                </div>
+                            </Link>
+                        </div>
+                    ))}
+                </div>
             </div>
             {/* currently playing */}
             {currentlyPlaying.isPlaying ? (
                 <div className={'backgroundDiv'} style={{'--background-image-url': `url(${currentlyPlaying.albumArt[0].url})`}}>
                     <div className={'playingDisplay-container'}>
-                        <img className={'listeningToImage'} src={currentlyPlaying.albumArt[1].url} alt={'album Image'}/>
+                        <img className={'listeningToImage'} src={currentlyPlaying.albumArt[1].url} alt={'album'}/>
                         <div className={'currentlyPlaying-text'}>
                             <h3>Now Playing</h3>
                             <h1>{currentlyPlaying.songTitle}</h1>
@@ -104,7 +106,7 @@ const UserDisplay = (props) => {
                     {recommendedTracks.map((recommended, index) => (
                         <div key={index} className={'card'}>
                             <Link to={`https://open.spotify.com/track/${recommended.id}`} target={'_blank'} className={'card-link'}>
-                                <img className={'card-image'} src={recommended.images[0].url} alt={'album Image'}/>
+                                <img className={'card-image'} src={recommended.images[0].url} alt={'album'}/>
                                 <div className={'card-info'}>
                                     <h4>{recommended.name}</h4>
                                     <p>{recommended.artists[0].name}</p>

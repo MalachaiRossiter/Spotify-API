@@ -6,6 +6,7 @@
     justify-content: center; /* Place the content in the vertical center of the container */
     align-items: center;
     background-image: url('../images/homepage-background.jpg');
+    background-size: cover;
 }
 
 #link-header {
@@ -13,7 +14,7 @@
     font-size: 80px;
     font-weight: 700;
     color: #fff;
-    margin-top: -50px; /* Adjust the negative margin to vertically center the text */
+    text-align: center;
 }
 
 #login-link {
@@ -30,4 +31,16 @@
     background-color: #00ff59;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transform: scale(1.05);
+}
+
+@media (max-width: 800px) {
+
+    #link-header{
+        font-size: 40px;
+    }
+
+    #login-link{
+        padding: 10px 25px;
+        font-size: 32px;
+    }
 }
